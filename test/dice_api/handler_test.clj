@@ -12,8 +12,8 @@
     (let [response (app (-> (mock/request :get "/api/plus?x=2&y=4")))
           body (parse-body (:body response))]
       (is (= (:status response) 200))
-      (is (= (get-in response [:headers "Content-Type"]) "application/json; charset=utf-8")
-      (is (= (:result body) 6)))))
+      (is (= (get-in response [:headers "Content-Type"]) "application/json; charset=utf-8"))
+      (is (= (:result body) 6))))
 
   (testing "Test POST request to /api/echo endpoint"
     (let [pizza {:name "Turtle Pizza"
@@ -27,4 +27,21 @@
                             (mock/body  (cheshire/generate-string pizza))))
           body     (parse-body (:body response))]
       (is (= (:status response) 200))
-      (is (= body pizza)))))
+      (is (= body pizza))))
+  (testing "Test GET request to /api/primes endpoint"
+    (let [primes {:primes [2]}
+         response (app (-> (mock/request :get "/api/primes?max=2")
+                           (mock/content-type "application/json")
+                           (mock/body (cheshire/generate-string primes))))
+         body (parse-body (:body response))]
+      (is (= (:status response) 200))
+      (is (= (get-in response [:headers "Content-Type"]) "application/json; charset=utf-8"))
+      (is (= body primes)))
+    (let [primes {:primes [2 3 5 7]}
+         response (app (-> (mock/request :get "/api/primes?max=10")
+                           (mock/content-type "application/json")
+                           (mock/body (cheshire/generate-string primes))))
+         body (parse-body (:body response))]
+      (is (= (:status response) 200))
+      (is (= (get-in response [:headers "Content-Type"]) "application/json; charset=utf-8"))
+      (is (= body primes)))))

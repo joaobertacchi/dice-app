@@ -30,6 +30,12 @@
         :summary "adds two numbers together"
         (ok {:result (+ x y)}))
 
+      (GET "/primes" []
+        :return {:primes [Long]}
+        :query-params [max :- Long]
+        :summary "calculates all primes up to max param"
+        (ok {:primes [2]}))
+
       (POST "/echo" []
         :return Pizza
         :body [pizza Pizza]
