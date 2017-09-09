@@ -47,7 +47,9 @@
         :return {:primes [Long]}
         :query-params [max :- Long]
         :summary "calculates all primes up to max param"
-        (ok {:primes (vec (sort (primes max)))}))
+        (if (<= max 1000)
+          (ok {:primes (vec (sort (primes max)))})
+          (bad-request "max > 1000")))
 
       (POST "/echo" []
         :return Pizza
