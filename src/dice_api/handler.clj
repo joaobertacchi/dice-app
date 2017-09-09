@@ -1,6 +1,8 @@
 (ns dice-api.handler
   (:require [compojure.api.sweet :refer :all]
             [ring.util.http-response :refer :all]
+            [ring.adapter.jetty :as jetty]
+            [environ.core :refer [env]]
             [schema.core :as s]))
 
 (s/defschema Pizza
@@ -33,10 +35,10 @@
         :body [pizza Pizza]
         :summary "echoes a Pizza"
         (ok pizza)))))
-        
+
 (defn -main [& [port]]
   (let [port (Integer. (or port (env :port) 5000))]
-    (jetty/run-jetty (site #'app) {:port port :join? false})))
+    (jetty/run-jetty (api #'app) {:port port :join? false})))
 
 ;; For interactive development:
 ;; (.stop server)
