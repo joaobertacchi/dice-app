@@ -8,8 +8,8 @@
 (s/defschema Pizza
   {:name s/Str
    (s/optional-key :description) s/Str
-   :size (s/enum :L :M :S)
-   :origin {:country (s/enum :FI :PO)
+   :size (s/enum "L" "M" "S")
+   :origin {:country (s/enum "FI" "PO")
             :city s/Str}})
 
 (def app
