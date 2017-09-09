@@ -12,6 +12,19 @@
    :origin {:country (s/enum "FI" "PO")
             :city s/Str}})
 
+(defn sieve [[xs ps]]
+  (let [[p & more] xs]
+    [(remove #(zero? (rem % p)) xs) (cons p ps)]))
+
+(defn primes [n]
+  (if (< n 2)
+    []
+    (->> [(range 2 (inc n)) nil]
+         (iterate sieve)
+         (drop-while #(<= (ffirst %) (Math/sqrt n)))
+         first
+         (apply concat))))
+
 (def app
   (api
     {:swagger
@@ -34,7 +47,7 @@
         :return {:primes [Long]}
         :query-params [max :- Long]
         :summary "calculates all primes up to max param"
-        (ok {:primes [2]}))
+        (ok {:primes (vec (sort (primes max)))}))
 
       (POST "/echo" []
         :return Pizza
