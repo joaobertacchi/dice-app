@@ -45,11 +45,11 @@
 
       (GET "/primes" []
         :return {:primes [Long]}
-        :query-params [max :- Long]
+        :query-params [max :- (describe Long "Integer non-negative value equal or smaller than 1000")]
         :summary "calculates all primes up to max param"
         (if (<= max 1000)
           (ok {:primes (vec (sort (primes max)))})
-          (bad-request "max > 1000")))
+          (forbidden {:errors {:max "should be less than or equal to 1000"}})))
 
       (POST "/echo" []
         :return Pizza

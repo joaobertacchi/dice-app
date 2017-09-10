@@ -37,6 +37,14 @@
       (is (= (:status response) 200))
       (is (= (get-in response [:headers "Content-Type"]) "application/json; charset=utf-8"))
       (is (= body primes)))
+    (let [primes {:errors {:max "should be less than or equal to 1000"}}
+         response (app (-> (mock/request :get "/api/primes?max=2000")
+                           (mock/content-type "application/json")
+                           (mock/body (cheshire/generate-string primes))))
+         body (parse-body (:body response))]
+      (is (= (:status response) 403))
+      (is (= (get-in response [:headers "Content-Type"]) "application/json; charset=utf-8"))
+      (is (= body primes)))
     (let [primes {:primes [2 3 5 7]}
          response (app (-> (mock/request :get "/api/primes?max=10")
                            (mock/content-type "application/json")
